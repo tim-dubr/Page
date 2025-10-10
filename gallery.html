@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-key="page_title">the twist of fate</title>
+    <meta name="description" content="the twist of fate">
+    <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="static/css/owl.carousel.css">
+    <link rel="stylesheet" href="static/css/owl.theme.default.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css">
+  <link href="css/main.css" rel="stylesheet"></head>
+  <body>
+    <div class="bg">
+      <header class="header">
+        <div class="header__top">
+          <div class="container">
+            <div class="header__top-content"><span data-i18n-key="header_top_left">Dubrovsky: past, present, future</span>
+              <div class="language-switcher">
+                <div class="lang-btn active" data-lang="en">EN</div>
+                <div class="lang-btn" data-lang="ru">РУ</div>
+                <div class="lang-indicator"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="header__bottom">
+          <div class="container">
+            <div class="header__content">
+              <div class="header__left"></div>
+              <div class="header__center"><a class="logo" href="index.html" data-i18n-key="name-logo"><img src="images/logo-en.svg"></a>
+                <!--a(href='index.html').logo-->
+                <!--	+img('logo-en.svg')-->
+                <!--	+img('logo-ru.svg')-->
+              </div>
+              <div class="header__right">
+                <div class="language-switcher">
+                  <div class="lang-btn active" data-lang="en">EN</div>
+                  <div class="lang-btn" data-lang="ru">РУ</div>
+                  <div class="lang-indicator"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="header__nav">
+          <div class="container">
+            <div class="header__nav-content"><a href="index.html"><span data-i18n-key="menu_home">Home</span></a>
+              <div></div><a href="books.html"><span data-i18n-key="menu_book">Family books</span></a>
+              <div></div><a href="gallery.html"><span data-i18n-key="menu_gallery">Family pics</span></a>
+            </div>
+            <div class="header__nav-border">
+              <div class="header__nav-border"></div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main class="main">
+        <div class="main__content">
+          <div class="gallery">
+            <div class="title" data-i18n-key="main_gallery_title">Family pics</div>
+            <div class="gallery__content">
+              <div class="gallery__list" id="gallery-container"></div>
+            </div>
+          </div>
+        </div>
+        <footer class="footer">
+          <div class="container">
+            <div class="footer__content">
+              <div class="footer__copy" data-i18n-key="copyright_text">© 2025 Dubrovsky</div>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  <script src="js/main.bafc069dd598150a50ca.js"></script></body>
+  <script type="text/javascript" src="static/js/jquery.min.js"></script>
+  <script type="text/javascript" src="static/js/owl.carousel.js"></script>
+  <script type="text/javascript" src="static/js/core.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
+  <script>
+    $(function() {
+          $.getJSON("images/images.json", function(data) {
+            const container = $("#gallery-container");
+    
+            $.each(data, function(folderName, files) {
+              // создаём блок для каждой группы
+              const section = $(`
+                <div class="gallery-section" id="${folderName}">
+                  <div class="book__title" data-i18n-key="${folderName}">${folderName}</div>
+                  <div class="owl-carousel owl-theme"></div>
+                </div>
+              `);
+    
+              const carousel = section.find(".owl-carousel");
+    
+              // добавляем картинки
+              files.forEach(file => {
+                // путь: images/gallery/<folderName>/<filename>
+                const imgPath = "images/gallery/" + folderName + "/" + file;
+                carousel.append(`
+                  <div class="item">
+                    <a href="${imgPath}" data-fancybox="${folderName}">
+                      <img src="${imgPath}" alt="${file}">
+                    </a>
+                  </div>
+                `);
+              });
+    
+              // инициализация карусели
+              carousel.owlCarousel({
+                items: 3,
+                margin: 10,
+                nav: true,
+                dots: false,
+                loop: true,
+                responsive: {
+                  0: { items: 1 },
+                  600: { items: 2 },
+                  1000: { items: 3 }
+                },
+                navText: [,]
+              });
+    
+              container.append(section);
+            });
+            Fancybox.bind("[data-fancybox]", {
+              Thumbs: false,
+              Toolbar: {
+                display: ["zoom", "close"],
+              }
+            });
+    
+    
+          });
+        });
+  </script>
+</html>
