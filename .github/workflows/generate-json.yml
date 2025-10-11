@@ -1,4 +1,4 @@
-name: Generate images.json
+name: Generate images.json and Deploy
 
 on:
   push:
@@ -36,3 +36,25 @@ jobs:
 
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: generate-json   # запускается после генерации JSON
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .  # деплоим всё, включая index.html, css, js, images
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
