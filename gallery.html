@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="static/css/owl.carousel.css">
     <link rel="stylesheet" href="static/css/owl.theme.default.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js"></script>
   <link href="css/main.css" rel="stylesheet"></head>
   <body>
     <div class="bg">
@@ -73,66 +74,70 @@
         </footer>
       </main>
     </div>
-  <script src="js/main.bafc069dd598150a50ca.js"></script></body>
+  <script src="js/main.0b2a1655253ae6229150.js"></script></body>
   <script type="text/javascript" src="static/js/jquery.min.js"></script>
   <script type="text/javascript" src="static/js/owl.carousel.js"></script>
   <script type="text/javascript" src="static/js/core.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
   <script>
     $(function() {
-          $.getJSON("images/images.json", function(data) {
-            const container = $("#gallery-container");
+      // 1️⃣ создаём экземпляр LazyLoad
+      var lazyLoadInstance = new LazyLoad({
+        elements_selector: ".lazy",
+        threshold: 300 // подгружает за 300px до видимой области
+      });
     
-            $.each(data, function(folderName, files) {
-              // создаём блок для каждой группы
-              const section = $(`
-                <div class="gallery-section" id="${folderName}">
-                  <div class="book__title" data-i18n-key="${folderName}">${folderName}</div>
-                  <div class="owl-carousel owl-theme"></div>
-                </div>
-              `);
+      $.getJSON("images/images.json", function(data) {
+        const container = $("#gallery-container");
     
-              const carousel = section.find(".owl-carousel");
+        $.each(data, function(folderName, files) {
+          const section = $(`
+            <div class="gallery-section" id="${folderName}">
+              <div class="book__title" data-i18n-key="${folderName}">${folderName}</div>
+              <div class="owl-carousel owl-theme"></div>
+            </div>
+          `);
     
-              // добавляем картинки
-              files.forEach(file => {
-                // путь: images/gallery/<folderName>/<filename>
-                const imgPath = "images/gallery/" + folderName + "/" + file;
-                carousel.append(`
-                  <div class="item">
-                    <a href="${imgPath}" data-fancybox="${folderName}">
-                      <img src="${imgPath}" alt="${file}">
-                    </a>
-                  </div>
-                `);
-              });
+          const carousel = section.find(".owl-carousel");
     
-              // инициализация карусели
-              carousel.owlCarousel({
-                items: 3,
-                margin: 10,
-                nav: true,
-                dots: false,
-                loop: true,
-                responsive: {
-                  0: { items: 1 },
-                  600: { items: 2 },
-                  1000: { items: 3 }
-                },
-                navText: [,]
-              });
-    
-              container.append(section);
-            });
-            Fancybox.bind("[data-fancybox]", {
-              Thumbs: false,
-              Toolbar: {
-                display: ["zoom", "close"],
-              }
-            });
-    
-    
+          files.forEach(file => {
+            const imgPath = "images/gallery/" + folderName + "/" + file;
+            carousel.append(`
+              <div class="item">
+                <a href="${imgPath}" data-fancybox="${folderName}">
+                  <img class="lazy" data-src="${imgPath}" alt="${file}">
+                </a>
+              </div>
+            `);
           });
+    
+          carousel.owlCarousel({
+            items: 3,
+            margin: 10,
+            nav: true,
+            dots: false,
+            loop: true,
+            responsive: {
+              0: { items: 1 },
+              600: { items: 2 },
+              1000: { items: 3 }
+            },
+            navText: ["<span class='prev'></span>", "<span class='next'></span>"]
+          });
+    
+          container.append(section);
         });
+    
+        // 2️⃣ обновляем LazyLoad после вставки изображений
+        lazyLoadInstance.update();
+    
+        Fancybox.bind("[data-fancybox]", {
+          Thumbs: false,
+          Toolbar: {
+            display: ["zoom", "close"],
+          }
+        });
+      });
+    });
   </script>
 </html>
