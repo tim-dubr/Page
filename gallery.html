@@ -74,22 +74,23 @@
         </footer>
       </main>
     </div>
-  <script src="js/main.c8351f2623674f5171ea.js"></script></body>
+  <script src="js/main.f4903677faabbfe0111a.js"></script></body>
   <script type="text/javascript" src="static/js/jquery.min.js"></script>
   <script type="text/javascript" src="static/js/owl.carousel.js"></script>
   <script type="text/javascript" src="static/js/core.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
   <script>
     $(function() {
-      // 1️⃣ создаём экземпляр LazyLoad
       var lazyLoadInstance = new LazyLoad({
         elements_selector: ".lazy",
-        threshold: 300 // подгружает за 300px до видимой области
+        threshold: 300
       });
     
       $.getJSON("images/images.json", function(data) {
         const container = $("#gallery-container");
+        const sliders = [];
     
+        // 1️⃣ Создаём слайдеры с 3 первыми изображениями
         $.each(data, function(folderName, files) {
           const section = $(`
             <div class="gallery-section" id="${folderName}">
@@ -100,45 +101,92 @@
     
           const carousel = section.find(".owl-carousel");
     
-          files.forEach(file => {
+          const firstBatch = files.slice(0, 3);
+          const lazyBatch = files.slice(3);
+    
+          firstBatch.forEach(file => {
             const imgPath = "images/gallery/" + folderName + "/" + file;
             carousel.append(`
               <div class="item">
                 <a href="${imgPath}" data-fancybox="${folderName}">
-                  <img class="lazy" data-src="${imgPath}" alt="${file}">
+                  <img src="${imgPath}" alt="${file}">
                 </a>
               </div>
             `);
           });
     
-          carousel.owlCarousel({
-            items: 3,
-            margin: 10,
-            nav: true,
-            dots: false,
-            loop: true,
-            responsive: {
-              0: { items: 1 },
-              600: { items: 2 },
-              1000: { items: 3 }
-            },
-            navText: ["<span class='prev'></span>", "<span class='next'></span>"]
-          });
+          section.data("lazyBatch", lazyBatch);
     
           container.append(section);
+          sliders.push({ folderName, carousel, section });
         });
     
-        // 2️⃣ обновляем LazyLoad после вставки изображений
-        lazyLoadInstance.update();
+        // 2️⃣ Ждём загрузки всех первых 3 изображений
+        const allImages = container.find("img");
+        let loadedCount = 0;
     
-        Fancybox.bind("[data-fancybox]", {
-          Thumbs: false,
-          Toolbar: {
-            display: ["zoom", "close"],
+        allImages.on("load", function() {
+          loadedCount++;
+          if (loadedCount === allImages.length) {
+            initSliders();
           }
+        }).each(function() {
+          if (this.complete) $(this).trigger("load");
         });
+    
+        // 3️⃣ Инициализация всех слайдеров
+        function initSliders() {
+          sliders.forEach(sl => {
+            sl.carousel.owlCarousel({
+              items: 3,
+              margin: 10,
+              nav: true,
+              dots: false,
+              loop: true,
+              responsive: {
+                0: { items: 1 },
+                600: { items: 2 },
+                1000: { items: 3 }
+              },
+              navText: ["<span class='prev'></span>", "<span class='next'></span>"]
+            });
+          });
+    
+          // После инициализации добавляем оставшиеся картинки
+          addRemainingImages();
+        }
+    
+        // 4️⃣ Добавляем остальные картинки после полной первичной загрузки
+        function addRemainingImages() {
+          sliders.forEach(sl => {
+            const lazyBatch = sl.section.data("lazyBatch");
+            lazyBatch.forEach(file => {
+              const imgPath = "images/gallery/" + sl.folderName + "/" + file;
+              const item = $(`
+                <div class="item">
+                  <a href="${imgPath}" data-fancybox="${sl.folderName}">
+                    <img class="lazy" data-src="${imgPath}" alt="${file}">
+                  </a>
+                </div>
+              `);
+              sl.carousel.trigger('add.owl.carousel', [item]);
+            });
+            sl.carousel.trigger('refresh.owl.carousel');
+          });
+    
+          // Обновляем LazyLoad
+          lazyLoadInstance.update();
+    
+          // Инициализация Fancybox
+          Fancybox.bind("[data-fancybox]", {
+            Thumbs: false,
+            Toolbar: { display: ["zoom", "close"] },
+          });
+        }
       });
     });
+    
+    // Плавное появление после lazyload
     document.addEventListener("lazyloaded", function(e) {
       e.target.classList.add("loaded");
     });
