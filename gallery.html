@@ -74,7 +74,7 @@
         </footer>
       </main>
     </div>
-  <script src="js/main.0b2a1655253ae6229150.js"></script></body>
+  <script src="js/main.c8351f2623674f5171ea.js"></script></body>
   <script type="text/javascript" src="static/js/jquery.min.js"></script>
   <script type="text/javascript" src="static/js/owl.carousel.js"></script>
   <script type="text/javascript" src="static/js/core.js"></script>
@@ -138,6 +138,9 @@
           }
         });
       });
+    });
+    document.addEventListener("lazyloaded", function(e) {
+      e.target.classList.add("loaded");
     });
   </script>
 </html>
