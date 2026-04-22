@@ -1,63 +1,103 @@
 $(document).ready(function () {
-  // const langSwitcher = document.getElementById('language-switcher');
-  const langSwitcher = document.querySelectorAll('.language-switcher');
   const defaultLang = 'en';
-
-  const basePath = window.location.pathname.includes("/dubrovsky/")
-    ? "/dubrovsky/"
-    : "/";
+  const basePath = window.location.pathname.includes("/dubrovsky/") ? "/dubrovsky/" : "/";
 
   // ----------------------------------------------------------------------
-  // Обновляем все ссылки на странице (чтобы сохранялся ?lang=ru)
-  function updateAllLinksLanguage(lang) {
-    document.querySelectorAll('a[href]').forEach(link => {
-      const href = link.getAttribute('href');
+  // Универсальная функция обновления всех ссылок на скачивание
+  function updateDownloadLinks(translations) {
+    // Находим все ссылки с атрибутами data-book и data-type
+    $('.book__download[data-book][data-type]').each(function() {
+      const $link = $(this);
+      const bookIndex = $link.data('book');
+      const fileType = $link.data('type');
 
-      if (
-        href &&
-        !href.startsWith('http') &&
-        !href.startsWith('#') &&
-        !href.startsWith('mailto') &&
-        !href.startsWith('javascript')
-      ) {
-        // если ссылка уже содержит /dubrovsky/, не добавляем повторно
-        const hasDubrovsky = href.includes('/dubrovsky/');
+      // Формируем ключ: book_1_pdf, book_2_doc и т.д.
+      const key = `book_${bookIndex}_${fileType}`;
 
-        // нормализуем путь (убираем лишние /)
-        const cleanHref = href.replace(/^\/+/, '');
-
-        // формируем базу — добавляем /dubrovsky/ только если его нет
-        const fullPath = hasDubrovsky
-          ? cleanHref
-          : basePath + cleanHref;
-
-        const url = new URL(fullPath, window.location.origin);
-
-        // сохраняем hash (если был)
-        if (link.hash) {
-          url.hash = link.hash;
-        }
-
-        // сохраняем query из оригинальной ссылки (если был)
-        const originalUrl = new URL(href, window.location.origin);
-        originalUrl.searchParams.forEach((value, key) => {
-          url.searchParams.set(key, value);
-        });
-
-        // добавляем lang
-        url.searchParams.set('lang', lang);
-
-        // применяем обновлённый href
-        link.setAttribute('href', url.pathname + url.search + url.hash);
-
-        // console.log(`🔗 Обновил ссылку: ${href} -> ${url.pathname + url.search + url.hash}`);
+      if (translations[key]) {
+        $link.attr('href', translations[key]);
+        console.log(`✅ Обновлена ссылка: ${key} -> ${translations[key]}`);
+      } else {
+        console.warn(`⚠️ Не найден ключ: ${key}`);
       }
     });
   }
 
+  // ----------------------------------------------------------------------
+  // Универсальная функция обновления всех текстов
+  function updateAllTexts(translations) {
+    // Обновляем все элементы с data-i18n-key
+    $('[data-i18n-key]').each(function() {
+      const $el = $(this);
+      const key = $el.data('i18n-key');
+
+      if (translations[key]) {
+        if (Array.isArray(translations[key])) {
+          $el.html(translations[key].join(''));
+        } else {
+          // Проверяем, не нужно ли сохранить вложенные элементы
+          if ($el.children().length > 0 && !$el.hasClass('book__download')) {
+            // Сохраняем HTML-структуру, обновляем только текст
+            const textNodes = $el.contents().filter(function() {
+              return this.nodeType === 3; // текстовые узлы
+            });
+            if (textNodes.length > 0) {
+              textNodes.first().replaceWith(translations[key]);
+            }
+          } else {
+            $el.text(translations[key]);
+          }
+        }
+
+        // Обновляем title страницы
+        if (key === 'page_title') {
+          document.title = translations[key];
+        }
+      }
+    });
+  }
 
   // ----------------------------------------------------------------------
-  // Обновляем URL браузера (pushState)
+  // Универсальная функция установки языка
+  async function setLanguage(lang) {
+    try {
+      console.log("🔄 Устанавливаю язык:", lang);
+
+      const response = await fetch(`static/js/locales/${lang}.json`);
+      if (!response.ok) {
+        console.error(`❌ Не удалось загрузить ${lang}.json`);
+        return;
+      }
+
+      const translations = await response.json();
+
+      // Устанавливаем язык в HTML
+      document.documentElement.lang = lang;
+
+      // Обновляем все тексты
+      updateAllTexts(translations);
+
+      // Обновляем ссылки на скачивание
+      updateDownloadLinks(translations);
+
+      // Подсвечиваем активную кнопку
+      $('.lang-btn').removeClass('active');
+      $(`.lang-btn[data-lang="${lang}"]`).addClass('active');
+
+      // Сохраняем в localStorage
+      localStorage.setItem('lang', lang);
+
+      // Обновляем URL и ссылки
+      updateUrlLang(lang);
+      updateAllLinksLanguage(lang);
+
+    } catch (err) {
+      console.error('❌ Ошибка при setLanguage:', err);
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // Обновляем URL браузера
   function updateUrlLang(lang) {
     const url = new URL(window.location);
     url.searchParams.set('lang', lang);
@@ -65,144 +105,93 @@ $(document).ready(function () {
   }
 
   // ----------------------------------------------------------------------
-  // Устанавливаем язык
-  async function setLanguage(lang) {
-    try {
-      // console.log("🔄 Устанавливаю язык:", lang);
+  // Обновляем все ссылки на странице
+  function updateAllLinksLanguage(lang) {
+    $('a[href]').each(function() {
+      const $link = $(this);
+      let href = $link.attr('href');
 
-      const response = await fetch(`static/js/locales/${lang}.json`);
-      if (!response.ok) {
-        // console.error(`❌ Не удалось загрузить ${lang}.json. Статус: ${response.status}`);
-        return;
-      }
+      if (href && !href.startsWith('http') && !href.startsWith('#') &&
+        !href.startsWith('mailto') && !href.startsWith('javascript')) {
 
-      const translations = await response.json();
+        const hasDubrovsky = href.includes('/dubrovsky/');
+        const cleanHref = href.replace(/^\/+/, '');
+        const fullPath = hasDubrovsky ? cleanHref : basePath + cleanHref;
 
-      // обновляем lang в <html>
-      document.documentElement.lang = lang;
+        try {
+          const url = new URL(fullPath, window.location.origin);
 
-      // применяем переводы
-      document.querySelectorAll('[data-i18n-key]').forEach((element) => {
-        const key = element.getAttribute('data-i18n-key');
-        if (translations[key]) {
-          if (Array.isArray(translations[key])) {
-            // если массив → соединяем и вставляем как HTML
-            element.innerHTML = translations[key].join("");
-          } else {
-            // если обычный текст → вставляем как текст
-            element.innerText = translations[key];
+          if ($link.attr('hash')) {
+            url.hash = $link.attr('hash');
           }
 
-          if (key === 'page_title') {
-            document.title = Array.isArray(translations[key])
-              ? translations[key].join("")
-              : translations[key];
-          }
+          url.searchParams.set('lang', lang);
+          $link.attr('href', url.pathname + url.search + url.hash);
+        } catch(e) {
+          console.warn('Ошибка при обновлении ссылки:', href, e);
         }
-      });
-
-      // подсвечиваем активную кнопку
-      document.querySelectorAll('.lang-btn').forEach((btn) => {
-        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-      });
-
-      // сохраняем
-      localStorage.setItem('lang', lang);
-      // console.log("💾 localStorage.lang =", localStorage.getItem('lang'));
-
-      // обновляем URL и ссылки
-      updateUrlLang(lang);
-      updateAllLinksLanguage(lang);
-    } catch (err) {
-      console.error('❌ Ошибка при setLanguage:', err);
-    }
+      }
+    });
   }
 
   // ----------------------------------------------------------------------
   // Определение языка по браузеру
   function detectUserLang() {
     const browserLang = navigator.language || navigator.userLanguage;
-    console.log("🌍 Язык браузера:", browserLang);
-
     return (browserLang && browserLang.startsWith("ru")) ? "ru" : "en";
   }
 
   // ----------------------------------------------------------------------
-  // Обработчик кликов
-  if (langSwitcher.length) {
-    langSwitcher.forEach((switcher) => {
-      switcher.addEventListener('click', (event) => {
-        if (event.target.classList.contains('lang-btn')) {
-          const newLang = event.target.getAttribute('data-lang');
-          if (newLang) {
-            console.log("🖱 Клик по языку:", newLang);
-            setLanguage(newLang);
-          }
-        }
-      });
-    });
-  }
+  // Обработчики кликов по переключателю языка
+  $('.language-switcher').on('click', '.lang-btn', function() {
+    const newLang = $(this).data('lang');
+    if (newLang) {
+      console.log("🖱 Клик по языку:", newLang);
+      setLanguage(newLang);
+    }
+  });
 
   // ----------------------------------------------------------------------
-  // Загружаем язык при старте
+  // Инициализация языка при старте
   (async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const langFromUrl = urlParams.get('lang');
     const langFromStorage = localStorage.getItem('lang');
 
-    let userLang = langFromUrl || langFromStorage;
-
-    if (!userLang) {
-      userLang = detectUserLang();
-    }
-
-    if (!userLang) {
-      userLang = defaultLang;
-    }
+    let userLang = langFromUrl || langFromStorage || detectUserLang() || defaultLang;
 
     console.log("🚀 Язык при старте:", userLang);
-    setLanguage(userLang);
+    await setLanguage(userLang);
 
-    // если был lang в URL → обновляем localStorage
     if (langFromUrl && langFromUrl !== langFromStorage) {
       localStorage.setItem('lang', langFromUrl);
-      console.log("💾 Сохранил язык из URL в localStorage:", langFromUrl);
     }
   })();
 
-
-
-
-//---modal
-  $('.toggler').on('click', function (e) {
+  // ----------------------------------------------------------------------
+  // Модальные окна и другие функции
+  $('.toggler').on('click', function(e) {
     e.preventDefault();
-    var $this = $(e.currentTarget);
-    var target = $this.data('target');
+    const target = $(this).data('target');
     $('.modal').removeClass('_active');
     $('body').removeClass('_modal-open');
     $('.modal__backdrop').fadeOut();
 
-    $("#" + $(this).data("target")).toggleClass('_active');
+    $(`#${target}`).toggleClass('_active');
     $('.modal__backdrop').fadeIn();
-    $("#" + $(this).data("target")).closest('body').toggleClass('_modal-open');
+    $('body').toggleClass('_modal-open');
   });
 
-  $('.modal__close, .modal__mask, .modal__backdrop').on('click', function (e) {
+  $('.modal__close, .modal__mask, .modal__backdrop').on('click', function(e) {
     e.preventDefault();
-
     $('.modal').removeClass('_active');
     $('.modal__backdrop').fadeOut();
     $('body').removeClass('_modal-open');
   });
-  // modal-sort
 
-
-  $(".book__item .more__link").on("click", function (e) {
+  $(".book__item .more__link").on("click", function(e) {
     e.preventDefault();
     $(this).closest(".book__item").find(".book__more").slideToggle(500);
     $(this).toggleClass("open");
   });
-
-
-
 });

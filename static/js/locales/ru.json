@@ -16,12 +16,18 @@
         "<b>и собственным поваром</b>, ",
         "как у Ниро Вульфа..."
     ],
+    "book_1_pdf": "images/cuisine-adventures-ru.pdf",
+    "book_1_doc": "images/cuisine-adventures-ru.docx",
+
+
     "main_book_2_title": "Уроки Рисования",
     "main_book_2_text": [
         "Никакой буржуазии с прислугой ",
         "<b>и собственным поваром</b>, ",
         "как у Ниро Вульфа..."
     ],
+    "book_2_pdf": "images/paint-parties.pdf",
+    "book_2_doc": "images/paint-parties.docx",
 
     "main_gallery_title": "Фотографии",
 
