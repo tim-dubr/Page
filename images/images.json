@@ -42,11 +42,14 @@
   ],
   "California": [
     "AL&L new Lab.jpg",
+    "CA Apricot.jpg",
+    "CA Persimon.jpg",
     "Golden Gate.jpg",
     "Orchard_2.jpg",
     "Orchard_3.JPG",
     "Pacific_1.JPG",
     "Pacific_2.JPG",
+    "Pacific.jpg",
     "Pantalassa.jpg",
     "San Francisco_1.jpg",
     "San Francisco_2.JPG",
@@ -73,15 +76,20 @@
     "Xian_5.jpg"
   ],
   "Cuisine": [
+    "Abalone.jpg",
     "Bago fruit sellers.jpg",
     "Cambodia fruits & silver.JPG",
     "China cooking_2008.jpg",
     "China wok.jpg",
     "Cuttlefish.JPG",
+    "Eggplants.jpg",
     "Field Stone vinery.JPG",
     "Galangal.JPG",
     "Genova pastorma.JPG",
     "Goose naturmort.jpg",
+    "Langust.jpg",
+    "Langustine Bangkok.jpg",
+    "Moscow sturgeon.jpg",
     "Peking duck & Char Siu.JPG",
     "Phuket night market.JPG",
     "Pineapple guava.JPG",
@@ -91,7 +99,8 @@
     "Tsukiji_2.JPG",
     "Tsukiji_3.JPG",
     "Tsukiji_4.JPG",
-    "Tsukiji_5.JPG"
+    "Tsukiji_5.JPG",
+    "Yangon tomato wok.jpg"
   ],
   "Dad’s family": [
     "Boris 1963.jpg",
@@ -123,6 +132,7 @@
     "Fiji_9.jpg"
   ],
   "Florence": [
+    "Firenze Duomo.jpg",
     "Florence_1 2006.jpg",
     "Florence_1.jpg",
     "Florence_10.jpg",
@@ -193,6 +203,7 @@
     "Boukoleon_4.jpg",
     "Boukoleon_from GLK mansion.jpg",
     "Christocline.jpg",
+    "City walls.jpg",
     "Constantine column.jpg",
     "Egyptian obelisk.jpg",
     "Fiala Blue_1st floor.jpg",
@@ -207,9 +218,15 @@
     "Lugal Dalu_1.jpg",
     "Lugal Dalu_2.jpg",
     "Obelisk.jpg",
-    "Pantocrator.jpg"
+    "Pantocrator 2026.jpg",
+    "Pantocrator.jpg",
+    "Platea column and obelisk.jpg"
   ],
   "Irrawaddy": [
+    "Bagan_1.jpg",
+    "Bagan_2.jpg",
+    "Bagan_3.jpg",
+    "Bagan_4.jpg",
     "Bridge_1.jpg",
     "Bridge_2.jpg",
     "Bridge_3.jpg",
@@ -223,6 +240,31 @@
     "Yadana Hsemee_1.jpg",
     "Yadana Hsemee_2.jpg",
     "Yadana Hsemee_3.jpg"
+  ],
+  "Kenya": [
+    "Kenya_1.jpg",
+    "Kenya_10.jpg",
+    "Kenya_11.jpg",
+    "Kenya_12.jpg",
+    "Kenya_13.jpg",
+    "Kenya_14.jpg",
+    "Kenya_15.jpg",
+    "Kenya_16.jpg",
+    "Kenya_17.jpg",
+    "Kenya_18.jpg",
+    "Kenya_19.jpg",
+    "Kenya_2.jpg",
+    "Kenya_20.jpg",
+    "Kenya_21.jpg",
+    "Kenya_22.jpg",
+    "Kenya_23.jpg",
+    "Kenya_3.jpg",
+    "Kenya_4.jpg",
+    "Kenya_5.jpg",
+    "Kenya_6.jpg",
+    "Kenya_7.jpg",
+    "Kenya_8.jpg",
+    "Kenya_9.jpg"
   ],
   "Kyoto": [
     "Fujiyama_2010.jpg",
@@ -256,6 +298,13 @@
     "Laos.JPG",
     "Mekong_1 2011.JPG",
     "Mekong_2.JPG",
+    "Mekong_3.jpg",
+    "Mekong_4.jpg",
+    "Mekong_5.jpg",
+    "Mekong_6.jpg",
+    "Mekong_7.jpg",
+    "Mekong_8.jpg",
+    "Mekong_9.jpg",
     "Pandaw.JPG"
   ],
   "Mom’s family": [
@@ -346,6 +395,11 @@
     "Ravenna_7.jpg"
   ],
   "Roma": [
+    "Colosseum at night.jpg",
+    "Pantheon_2.jpg",
+    "Proserpine Borghese_1.jpg",
+    "Proserpine Borghese_2.jpg",
+    "Proserpine Borghese_3.jpg",
     "Roma_1 2006.jpg",
     "Roma_2 2006.jpg",
     "Roma_3 2006.jpg",
@@ -356,9 +410,11 @@
     "Rome_5.jpg",
     "Rome_6.jpg",
     "Rome_7.jpg",
-    "Rome_8.jpg"
+    "Rome_8.jpg",
+    "San Pietro.jpg"
   ],
   "Segovia": [
+    "Alcazar Segovia.jpg",
     "Jewish quarter.JPG",
     "Old jewish crypt_1.JPG",
     "Old jewish crypt_2.JPG",
@@ -371,12 +427,15 @@
   "Shwedagon": [
     "Bagan_1 2009.JPG",
     "Bagan_2 2009.JPG",
+    "Bago.jpg",
     "Golgen Rock.jpg",
     "Irrawaddy 2014.jpg",
     "Ruby catch.jpg",
     "Sapphire catch.jpg",
     "Shwe Bon Thar catch.jpg",
     "Shwedagon 2019.jpg",
+    "Shwedagon 2026.jpg",
+    "Shwedagon monk.jpg",
     "Shwedagon_1 2024.jpg",
     "Shwedagon_2 2024.jpg",
     "Shwedagon_3 2024.jpg",
@@ -425,11 +484,14 @@
   "Thai": [
     "747.JPG",
     "777.JPG",
+    "Chiang Mai_2024.jpg",
     "Maelana cave_1 2018.JPG",
     "Maelana cave_2.jpg",
     "Maelana cave_3.jpg",
     "Maelana cave_4.jpg",
     "Maelana cave_5.jpg",
+    "Maelana cave_6.jpg",
+    "Maelana cave_7.jpg",
     "Phuket_1 2024.JPG",
     "Phuket_2 2024.JPG",
     "Phuket_2008.JPG",
@@ -439,7 +501,8 @@
     "Phuket_6 2024.JPG",
     "Phuket_7 2024.JPG",
     "Phuket_8 2024.JPG",
-    "Under the Bodhi tree.jpg"
+    "Under the Bodhi tree.jpg",
+    "Wat Umong.jpg"
   ],
   "Tim’s old pics": [
     "Altay_1 1986.jpg",
@@ -484,6 +547,7 @@
     "Palenque Mayan_3.JPG"
   ],
   "Yunnan": [
+    "Dragon Mountain.jpg",
     "Glacier Kawagebo.jpg",
     "Kawa_Karpo.jpg",
     "Lijiang_1 2011.JPG",
